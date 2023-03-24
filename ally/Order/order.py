@@ -239,35 +239,34 @@ class Order:
         Can be viewed at obj.instrument
 
         """
-        if len(symbol) > 15:
-            # Almost certainly an option, if not unintelligible
+        if len(symbol) <= 15:
+            self.instrument = Stock(symbol=symbol)
+            return
 
-            try:
+        try:
 
-                # Extract the symbol
-                underlying = option_symbol(symbol)
+            # Extract the symbol
+            underlying = option_symbol(symbol)
 
-                # Extract strike price
-                strike = option_strike(symbol)
+            # Extract strike price
+            strike = option_strike(symbol)
 
-                # Extract expiration date
-                exp_date = option_maturity(symbol)
+            # Extract expiration date
+            exp_date = option_maturity(symbol)
 
-                # Extract
-                callput = option_callput(symbol)
+            # Extract
+            callput = option_callput(symbol)
 
-                # Wrap it up and spank it on the bottom!
-                self.instrument = Option(
-                    direction=callput,
-                    underlying=underlying,
-                    exp_date=exp_date,
-                    strike=strike,
-                )
+            # Wrap it up and spank it on the bottom!
+            self.instrument = Option(
+                direction=callput,
+                underlying=underlying,
+                exp_date=exp_date,
+                strike=strike,
+            )
 
-            except:
-                raise
-
-        self.instrument = Stock(symbol=symbol)
+        except:
+            raise
 
     def set_time(self, time):
         """Sets the order's time-in-force.
